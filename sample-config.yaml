@@ -1,0 +1,18 @@
+services:
+  deta:
+    projectKey: default-project-key
+    driveName: backup
+  cloudflare:
+    url: https://accountid.r2.cloudflarestorage.com
+    bucket: backup
+    accessKeyId: 1234567890abcde
+    accessKeySecret: 1234567890abcdefghijklmnopqrstuvwxyz
+jobs:
+  - name: test
+    useZip: true
+    path: /home/pi/test/
+    uploadTo: deta
+  - name: vault
+    useZip: true
+    path: /home/pi/vault/
+    uploadTo: cloudflare

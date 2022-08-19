@@ -8,7 +8,7 @@ Backup your data to private cloud services.
 - Compressed data before uploading
 - Easy to setup
 - Lightweight, fast, reliable
-- Web interface for manage and logging
+- Web interface for manage and report (Soon)
 
 ## Supported services:
 
