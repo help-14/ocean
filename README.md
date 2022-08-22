@@ -1,4 +1,4 @@
-# Ocean backup
+# Ocean backup 🌊 
 
 An ultility to backup your data to private cloud services.
 
