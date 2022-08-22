@@ -10,16 +10,18 @@ import (
 )
 
 type DetaService struct {
+	name   string
 	config obconfig.DetaConfig
 	drive  *drive.Drive
 }
 
-func (service DetaService) Setup(config obconfig.Config) error {
-	service.config = config.Services.Deta
+func (service *DetaService) Setup(config obconfig.ServiceConfig) error {
+	service.config = config.Deta
+	service.name = config.Name
 	return nil
 }
 
-func (service DetaService) Connect() error {
+func (service *DetaService) Connect() error {
 	d, err := deta.New(deta.WithProjectKey(service.config.ProjectKey))
 	if err != nil {
 		return err
@@ -34,12 +36,16 @@ func (service DetaService) Connect() error {
 	return nil
 }
 
-func (service DetaService) Disconnect() error {
+func (service *DetaService) Name() string {
+	return service.name
+}
+
+func (service *DetaService) Disconnect() error {
 	service.drive = nil
 	return nil
 }
 
-func (service DetaService) Upload(localPath string, remotePath string) error {
+func (service *DetaService) Upload(localPath string, remotePath string) error {
 	file, err := os.Open(localPath)
 	if err != nil {
 		return err

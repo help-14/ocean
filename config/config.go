@@ -9,13 +9,15 @@ import (
 )
 
 type Config struct {
-	Services ConfigServices `yaml:"services"`
-	Jobs     []BackupJob    `yaml:"jobs"`
+	Services []ServiceConfig `yaml:"services"`
+	Jobs     []BackupJob     `yaml:"jobs"`
 }
 
-type ConfigServices struct {
-	Deta       DetaConfig `yaml:"deta"`
-	Cloudflare S3Config   `yaml:"cloudflare"`
+type ServiceConfig struct {
+	Deta    DetaConfig `yaml:"deta"`
+	S3      S3Config   `yaml:"s3"`
+	Name    string     `yaml:"name"`
+	Service string     `yaml:"service"`
 }
 
 func LoadConfig() (*Config, error) {

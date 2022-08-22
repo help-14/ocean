@@ -3,7 +3,8 @@ package services
 import "github.com/help-14/ocean-backup/config"
 
 type Service interface {
-	Setup(config config.Config) error
+	Name() string
+	Setup(config config.ServiceConfig) error
 
 	Connect() error
 	Disconnect() error

@@ -13,16 +13,22 @@ import (
 )
 
 type CloudFlareService struct {
+	name   string
 	config obconfig.S3Config
 	client *s3.Client
 }
 
-func (service CloudFlareService) Setup(config obconfig.Config) error {
-	service.config = config.Services.Cloudflare
+func (service *CloudFlareService) Name() string {
+	return service.name
+}
+
+func (service *CloudFlareService) Setup(config obconfig.ServiceConfig) error {
+	service.config = config.S3
+	service.name = config.Name
 	return nil
 }
 
-func (service CloudFlareService) Connect() error {
+func (service *CloudFlareService) Connect() error {
 	r2Resolver := aws.EndpointResolverWithOptionsFunc(func(sv, region string, options ...interface{}) (aws.Endpoint, error) {
 		return aws.Endpoint{
 			URL: service.config.Url,
@@ -41,12 +47,12 @@ func (service CloudFlareService) Connect() error {
 	return nil
 }
 
-func (service CloudFlareService) Disconnect() error {
+func (service *CloudFlareService) Disconnect() error {
 	service.client = nil
 	return nil
 }
 
-func (service CloudFlareService) Upload(localPath string, remotePath string) error {
+func (service *CloudFlareService) Upload(localPath string, remotePath string) error {
 	uploader := manager.NewUploader(service.client)
 	uploadFile, err := os.Open(localPath)
 	if err != nil {
