@@ -1,6 +1,6 @@
-# ocean-backup
+# Ocean backup
 
-Backup your data to private cloud services.
+An ultility to backup your data to private cloud services.
 
 ## Features:
 
