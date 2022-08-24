@@ -1,6 +1,6 @@
 package services
 
-import "github.com/help-14/ocean-backup/config"
+import "github.com/help-14/ocean/config"
 
 type Service interface {
 	Name() string

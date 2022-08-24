@@ -4,6 +4,8 @@ import (
 	"database/sql"
 	"log"
 	"os"
+
+	_ "github.com/mattn/go-sqlite3"
 )
 
 const dbPath = "./ocean.db"
@@ -11,7 +13,7 @@ const serviceTag = "database"
 
 var db *sql.DB = nil
 
-func Connect() error {
+func Setup() error {
 	// Create SQLite file
 	dbExist := true
 	_, err := os.Stat(dbPath)
@@ -71,13 +73,13 @@ func createTable() error {
 	for _, sql := range createTableSQL {
 		statement, err := db.Prepare(sql)
 		if err != nil {
-			log.Fatalln("Prepare table failed: ", err.Error())
+			log.Println("Prepare table failed!")
 			return err
 		}
 
 		_, err = statement.Exec()
 		if err != nil {
-			log.Fatalln("Create table failed: ", err.Error())
+			log.Println("Create table failed!")
 			return err
 		}
 	}

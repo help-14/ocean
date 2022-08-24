@@ -6,10 +6,11 @@ import (
 	"os"
 	"strings"
 
-	"github.com/help-14/ocean-backup/config"
-	"github.com/help-14/ocean-backup/dashboard"
-	"github.com/help-14/ocean-backup/services"
-	"github.com/help-14/ocean-backup/utils"
+	"github.com/help-14/ocean/config"
+	"github.com/help-14/ocean/dashboard"
+	"github.com/help-14/ocean/db"
+	"github.com/help-14/ocean/services"
+	"github.com/help-14/ocean/utils"
 	"github.com/robfig/cron/v3"
 )
 
@@ -21,8 +22,17 @@ func main() {
 	loadedConfig, err := config.LoadConfig()
 	if err != nil {
 		log.Fatalf("Reading config.yaml failed!\n%s\n", err.Error())
+	} else {
+		log.Println("Config loaded!")
 	}
 	LoadedConfig = *loadedConfig
+
+	err = db.Setup()
+	if err != nil {
+		log.Fatalln(err.Error())
+	} else {
+		log.Println("Database loaded!")
+	}
 
 	for _, serviceConfig := range LoadedConfig.Services {
 		var newService services.Service

@@ -8,8 +8,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/help-14/ocean-backup/config"
-	"github.com/help-14/ocean-backup/services"
+	"github.com/help-14/ocean/config"
+	"github.com/help-14/ocean/services"
 	"github.com/robfig/cron/v3"
 )
 
@@ -59,9 +59,7 @@ func createZipName(name string) string {
 	result := strings.ReplaceAll(name, " ", "_")
 	result = strings.ToLower(result)
 	result = strings.TrimSpace(result)
-	if !strings.Contains(result, ".zip") {
-		result = result + ".zip"
-	}
+	result = result + ".zip"
 	return result
 }
 

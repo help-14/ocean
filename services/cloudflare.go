@@ -9,7 +9,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/credentials"
 	"github.com/aws/aws-sdk-go-v2/feature/s3/manager"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
-	obconfig "github.com/help-14/ocean-backup/config"
+	obconfig "github.com/help-14/ocean/config"
 )
 
 type CloudFlareService struct {

@@ -1,0 +1,17 @@
+services:
+  magma:
+    container_name: ocean
+    image: help14/ocean
+    restart: unless-stopped
+    volumes:
+      - ./config.yaml:/app/config.yaml
+    #  - ./ocean.db:/app/ocean.db
+    ports:
+      - "8000:8000"
+  watchtower:
+    image: containrrr/watchtower
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /root/.docker/config.json:/config.json
+    command: --interval 30 --cleanup

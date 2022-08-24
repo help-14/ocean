@@ -1,4 +1,4 @@
-module github.com/help-14/ocean-backup
+module github.com/help-14/ocean
 
 go 1.18
 

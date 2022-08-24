@@ -6,7 +6,7 @@ import (
 
 	"github.com/deta/deta-go/deta"
 	"github.com/deta/deta-go/service/drive"
-	obconfig "github.com/help-14/ocean-backup/config"
+	obconfig "github.com/help-14/ocean/config"
 )
 
 type DetaService struct {
