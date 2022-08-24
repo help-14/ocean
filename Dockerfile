@@ -4,9 +4,15 @@ FROM golang:1.18-alpine AS build
 
 RUN mkdir /app
 WORKDIR /app
-COPY ./ /app
+COPY ./src /app
+
+RUN apk update
+RUN apk upgrade
+RUN apk add gcc
+RUN apk add g++
 
 RUN go mod download
+RUN CGO_ENABLED=1 GOOS=linux go install github.com/mattn/go-sqlite3
 RUN go build -o /bin
 
 ## Deploy
@@ -18,7 +24,6 @@ LABEL maintainer="mail@help14.com"
 RUN mkdir /app
 
 COPY --from=build /bin/ocean /app/
-COPY ./sample-config.yaml /config.yaml
 
 EXPOSE 8000
 
