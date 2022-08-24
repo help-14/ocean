@@ -83,5 +83,5 @@ func createTempPath(fileName string) string {
 }
 
 func createRemotePath(fileName string) string {
-	return filepath.Join("/", time.Now().Format("2006-01-02"), fileName)
+	return filepath.Join(time.Now().Format("2006-01-02"), fileName)
 }
