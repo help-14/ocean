@@ -2,6 +2,7 @@ package utils
 
 import (
 	"errors"
+	"log"
 	"os"
 	"path/filepath"
 	"strings"
@@ -18,7 +19,7 @@ type JobRunner struct {
 	Service services.Service
 }
 
-func (runner JobRunner) Run() error {
+func (runner *JobRunner) Run() error {
 	uploadFile := ""
 	uploadPath := runner.Job.Path
 
@@ -26,13 +27,16 @@ func (runner JobRunner) Run() error {
 	if os.IsNotExist(err) {
 		return err
 	}
+	if !stats.IsDir() {
+		uploadFile = stats.Name()
+	}
 
-	if runner.Job.UseZip || stats.IsDir() {
-		pwd, _ := os.Getwd()
+	if (runner.Job.UseZip && !strings.Contains(uploadPath, ".zip")) || stats.IsDir() {
 		uploadFile = createZipName(runner.Job.Name)
-		uploadPath = filepath.Join(pwd, "temp", uploadFile)
+		uploadPath = createTempPath(uploadFile)
 		err = ZipFolder(runner.Job.Path, uploadFile)
 		if err != nil {
+			log.Println(err.Error())
 			return err
 		}
 	}
@@ -41,7 +45,17 @@ func (runner JobRunner) Run() error {
 		return errors.New("No service found with this name: " + runner.Job.UploadTo)
 	}
 	remotePath := createRemotePath(uploadFile)
-	return runner.Service.Upload(uploadPath, remotePath)
+	err = runner.Service.Upload(uploadPath, remotePath)
+	if err != nil {
+		log.Println(err.Error())
+		return err
+	}
+	log.Println("File " + uploadFile + "uploaded to " + runner.Service.Name())
+
+	if strings.Contains(uploadPath, tempFolder()) {
+		return os.Remove(uploadPath)
+	}
+	return nil
 }
 
 func createZipName(name string) string {
@@ -54,6 +68,23 @@ func createZipName(name string) string {
 	return result
 }
 
+func tempFolder() string {
+	pwd, _ := os.Getwd()
+	tempPath := filepath.Join(pwd, "temp")
+
+	if _, err := os.Stat(tempPath); errors.Is(err, os.ErrNotExist) {
+		err := os.Mkdir(tempPath, os.ModePerm)
+		if err != nil {
+			log.Println(err)
+		}
+	}
+	return tempPath
+}
+
+func createTempPath(fileName string) string {
+	return filepath.Join(tempFolder(), fileName)
+}
+
 func createRemotePath(fileName string) string {
-	return filepath.Join("/", time.Now().Format("2006-02-13"), fileName)
+	return filepath.Join("/", time.Now().Format("2006-01-02"), fileName)
 }

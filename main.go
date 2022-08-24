@@ -57,7 +57,10 @@ func main() {
 		}
 		cron := cron.New()
 		cron.AddFunc(cronTime, func() {
-			runner.Run()
+			err = runner.Run()
+			if err != nil {
+				log.Println(err.Error())
+			}
 		})
 		cron.Start()
 		runner.Cron = cron
