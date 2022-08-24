@@ -1,3 +1,4 @@
+useDashboard: true
 services:
   - name: location1
     service: deta

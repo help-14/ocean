@@ -36,7 +36,6 @@ func (runner *JobRunner) Run() error {
 		uploadPath = createTempPath(uploadFile)
 		err = ZipFolder(runner.Job.Path, uploadFile)
 		if err != nil {
-			log.Println(err.Error())
 			return err
 		}
 	}
@@ -47,10 +46,8 @@ func (runner *JobRunner) Run() error {
 	remotePath := createRemotePath(uploadFile)
 	err = runner.Service.Upload(uploadPath, remotePath)
 	if err != nil {
-		log.Println(err.Error())
 		return err
 	}
-	log.Println("File " + uploadFile + "uploaded to " + runner.Service.Name())
 
 	if strings.Contains(uploadPath, tempFolder()) {
 		return os.Remove(uploadPath)

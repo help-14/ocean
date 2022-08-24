@@ -1,12 +1,13 @@
 package main
 
 import (
-	"io"
+	"bufio"
 	"log"
-	"net/http"
+	"os"
 	"strings"
 
 	"github.com/help-14/ocean-backup/config"
+	"github.com/help-14/ocean-backup/dashboard"
 	"github.com/help-14/ocean-backup/services"
 	"github.com/help-14/ocean-backup/utils"
 	"github.com/robfig/cron/v3"
@@ -19,7 +20,7 @@ var JobRunners []utils.JobRunner
 func main() {
 	loadedConfig, err := config.LoadConfig()
 	if err != nil {
-		log.Fatalln("Reading config.yaml failed!", err)
+		log.Fatalf("Reading config.yaml failed!\n%s\n", err.Error())
 	}
 	LoadedConfig = *loadedConfig
 
@@ -32,18 +33,18 @@ func main() {
 		case config.ServiceName_Cloudflare:
 			newService = new(services.CloudFlareService)
 		default:
-			log.Fatalln("Unsupported service name: "+serviceConfig.Service, err)
+			log.Fatalf("Unsupported service name: %s\n%s\n", serviceConfig.Service, err.Error())
 		}
 
 		err = newService.Setup(serviceConfig)
 		if err != nil {
-			log.Fatalln("Setup service '"+serviceConfig.Name+"' failed!", err)
+			log.Fatalf("Setup service '%s' failed!\n%s\n", serviceConfig.Name, err.Error())
 		}
 		err = newService.Connect()
 		if err != nil {
-			log.Fatalln("Connect to service '"+serviceConfig.Name+"' failed!", err)
+			log.Fatalf("Connect to service '%s' failed!\n%s\n", serviceConfig.Name, err.Error())
 		}
-		log.Println("Service '" + serviceConfig.Name + "' is connected!")
+		log.Printf("Service '%s' is connected!\n", serviceConfig.Name)
 		SupportServices = append(SupportServices, newService)
 	}
 
@@ -60,6 +61,8 @@ func main() {
 			err = runner.Run()
 			if err != nil {
 				log.Println(err.Error())
+			} else {
+				log.Printf("'%s' uploaded to '%s'\n", runner.Job.Path, runner.Service.Name())
 			}
 		})
 		cron.Start()
@@ -74,13 +77,11 @@ func main() {
 		JobRunners = append(JobRunners, runner)
 	}
 
-	// Hello world, the web server
-	helloHandler := func(w http.ResponseWriter, req *http.Request) {
-		io.WriteString(w, "Hello, world!\n")
-	}
-
-	http.HandleFunc("/hello", helloHandler)
 	log.Println("Ocean backup is started!")
-	log.Println("Web dashboard is running at http://localhost:8000")
-	log.Fatal(http.ListenAndServe(":8000", nil))
+	if loadedConfig.UseDashboard {
+		dashboard.Start()
+	} else {
+		input := bufio.NewScanner(os.Stdin)
+		input.Scan()
+	}
 }

@@ -1,7 +1,6 @@
 package config
 
 import (
-	"fmt"
 	"io/ioutil"
 	"path/filepath"
 
@@ -9,8 +8,9 @@ import (
 )
 
 type Config struct {
-	Services []ServiceConfig `yaml:"services"`
-	Jobs     []BackupJob     `yaml:"jobs"`
+	UseDashboard bool            `yaml:"useDashboard"`
+	Services     []ServiceConfig `yaml:"services"`
+	Jobs         []BackupJob     `yaml:"jobs"`
 }
 
 type ServiceConfig struct {
@@ -23,14 +23,12 @@ type ServiceConfig struct {
 func LoadConfig() (*Config, error) {
 	yamlFile, err := ioutil.ReadFile(filepath.Join("config.yaml"))
 	if err != nil {
-		fmt.Printf("Error reading config file: %s\n", err)
 		return nil, err
 	}
 
 	var yamlConfig *Config
 	err = yaml.Unmarshal(yamlFile, &yamlConfig)
 	if err != nil {
-		fmt.Printf("Error parsing config file: %s\n", err)
 		return nil, err
 	}
 
