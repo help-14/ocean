@@ -1,5 +1,5 @@
 services:
-  magma:
+  ocean:
     container_name: ocean
     image: help14/ocean
     restart: unless-stopped
