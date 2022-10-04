@@ -18,3 +18,4 @@ config.yaml
 ocean.db
 temp
 ocean.db
+ocean.sqlite
