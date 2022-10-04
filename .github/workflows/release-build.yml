@@ -1,12 +1,8 @@
 name: release build
 
-# on:
-#   release:
-#     types: [created]
 on:
-  push:
-    branches:
-      - "main"
+  release:
+    types: [created]
 
 jobs:
   releases-matrix:
