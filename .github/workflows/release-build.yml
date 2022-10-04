@@ -30,5 +30,6 @@ jobs:
           goos: ${{ matrix.goos }}
           goarch: ${{ matrix.goarch }}
           goversion: "1.19"
+          release_tag: "v1"
           project_path: "./src"
           binary_name: "ocean"
