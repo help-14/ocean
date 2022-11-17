@@ -18,8 +18,8 @@ RUN go build -o /bin
 ## Deploy
 
 FROM alpine:latest
-MAINTAINER Help-14 [mail@help14.com]
-LABEL maintainer="mail@help14.com"
+MAINTAINER Help-14 [ocean@help14.com]
+LABEL maintainer="ocean@help14.com"
 
 RUN mkdir /app
 
