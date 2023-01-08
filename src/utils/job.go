@@ -2,6 +2,7 @@ package utils
 
 import (
 	"errors"
+	"fmt"
 	"log"
 	"os"
 	"path/filepath"
@@ -36,6 +37,7 @@ func (runner *JobRunner) Run() error {
 		uploadPath = createTempPath(uploadFile)
 		err = ZipFolder(runner.Job.Path, uploadFile)
 		if err != nil {
+			fmt.Println(err.Error())
 			return err
 		}
 	}
@@ -46,6 +48,7 @@ func (runner *JobRunner) Run() error {
 	remotePath := createRemotePath(uploadFile)
 	err = runner.Service.Upload(uploadPath, remotePath)
 	if err != nil {
+		fmt.Println(err.Error())
 		return err
 	}
 
