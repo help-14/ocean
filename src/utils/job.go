@@ -32,13 +32,11 @@ func (runner *JobRunner) Run() error {
 		uploadFile = stats.Name()
 	}
 
-	fmt.Println("UseZip", runner.Job.UseZip)
-	fmt.Println("Contains zip", strings.Contains(uploadPath, ".zip"))
-	fmt.Println("stats.IsDir()", stats.IsDir())
 	if (runner.Job.UseZip && !strings.Contains(uploadPath, ".zip")) || stats.IsDir() {
 		uploadFile = createZipName(runner.Job.Name)
 		uploadPath = createTempPath(uploadFile)
-		err = ZipFolder(runner.Job.Path, uploadFile)
+		fmt.Println("Creating zip file:", uploadFile)
+		err = CompressZip(runner.Job.Path, uploadFile)
 		if err != nil {
 			fmt.Println(err.Error())
 			return err
