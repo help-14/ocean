@@ -64,8 +64,12 @@ func createZipName(name string) string {
 }
 
 func tempFolder() string {
-	pwd, _ := os.Getwd()
-	tempPath := filepath.Join(pwd, "temp")
+	tempPath := os.Getenv("TEMP_PATH")
+
+	if len(tempPath) <= 0 {
+		pwd, _ := os.Getwd()
+		tempPath = filepath.Join(pwd, "temp")
+	}
 
 	if _, err := os.Stat(tempPath); errors.Is(err, os.ErrNotExist) {
 		err := os.Mkdir(tempPath, os.ModePerm)
